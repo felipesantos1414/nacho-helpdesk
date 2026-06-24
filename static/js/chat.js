@@ -46,13 +46,16 @@ function applyLang(lang) {
     ).join('');
   }
 
-  // Rebuild chips with translated messages
+  // Rebuild chips with translated messages (sidebar + mobile bar)
+  const chipsHtml = t('chips').map(c =>
+    `<button class="chip" onclick="quickSend('${c.msg}')">${c.label}</button>`
+  ).join('');
+
   const chips = document.getElementById('chipsContainer');
-  if (chips) {
-    chips.innerHTML = t('chips').map(c =>
-      `<button class="chip" onclick="quickSend('${c.msg}')">${c.label}</button>`
-    ).join('');
-  }
+  if (chips) chips.innerHTML = chipsHtml;
+
+  const mobileChips = document.getElementById('mobileChips');
+  if (mobileChips) mobileChips.innerHTML = chipsHtml;
 }
 
 // ── Send Message ──────────────────────────────────────────
