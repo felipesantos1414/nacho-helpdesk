@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacho – AI HelpDesk Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- ── Sidebar ───────────────────────────────────────── -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="/static/images/nacho-photo.png" class="logo-photo" alt="Nacho">
+            <div>
+                <span class="logo-name">Nacho</span>
+                <span class="logo-sub">AI HelpDesk</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="/" class="nav-item active" id="navChat">
+                <svg viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                <span data-i18n="chat">Chat</span>
+            </a>
+            <a href="/dashboard" class="nav-item" id="navDash">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span data-i18n="dashboard">Dashboard</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-problems">
+            <p class="sidebar-section-title" data-i18n="commonProblems">Problemas comuns</p>
+            <div class="problem-chips" id="chipsContainer"></div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="new-chat-btn" onclick="newSession()">
+                <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                <span data-i18n="newChat">Nova conversa</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ── Chat Area ─────────────────────────────────────── -->
+    <main class="chat-main">
+        <header class="chat-header">
+            <div class="chat-header-info">
+                <div class="avatar-wrap">
+                    <div class="avatar-dot"></div>
+                    <img src="/static/images/nacho-photo.png" class="avatar-photo" alt="Nacho">
+                </div>
+                <div>
+                    <h1 class="chat-title">Nacho <span class="badge-ai">AI HelpDesk</span></h1>
+                    <p class="chat-status"><span class="status-dot"></span> <span data-i18n="statusText">Online — pronto para ajudar</span></p>
+                </div>
+            </div>
+            <div class="chat-header-actions">
+                <!-- Flag buttons — SVG flags, work on all systems -->
+                <button class="flag-btn" id="flagPT" onclick="applyLang('pt')" title="Português">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 14">
+                        <rect width="20" height="14" fill="#009C3B"/>
+                        <polygon points="10,1 19,7 10,13 1,7" fill="#FEDF00"/>
+                        <circle cx="10" cy="7" r="3.2" fill="#002776"/>
+                        <path d="M7,6.5 Q10,5.5 13,6.5" stroke="white" stroke-width="0.6" fill="none"/>
+                    </svg>
+                </button>
+                <button class="flag-btn" id="flagEN" onclick="applyLang('en')" title="English">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 14">
+                        <rect width="20" height="14" fill="#012169"/>
+                        <path d="M0,0 L20,14 M20,0 L0,14" stroke="white" stroke-width="2.8"/>
+                        <path d="M0,0 L20,14 M20,0 L0,14" stroke="#C8102E" stroke-width="1.6"/>
+                        <path d="M10,0 V14 M0,7 H20" stroke="white" stroke-width="4"/>
+                        <path d="M10,0 V14 M0,7 H20" stroke="#C8102E" stroke-width="2.4"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="messages" id="messages">
+            <div class="msg-row bot" id="welcomeMsg">
+                <div class="msg-avatar-photo">
+                    <img src="/static/images/nacho-photo.png" alt="Nacho">
+                </div>
+                <div class="msg-bubble bot">
+                    <p id="welcomeText1"></p>
+                    <p id="welcomeText2"></p>
+                    <div class="welcome-categories" id="welcomeCats"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="input-wrap" id="inputWrap">
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Digite sua dúvida de TI..."
+                    maxlength="300"
+                    autocomplete="off"
+                    onkeydown="if(event.key==='Enter') sendMessage()"
+                />
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </button>
+            </div>
+            <p class="input-hint" data-i18n="inputHint">Nacho responde apenas sobre problemas de TI e HelpDesk</p>
+        </div>
+    </main>
+
+    <script src="/static/js/translations.js"></script>
+    <script src="/static/js/chat.js"></script>
+</body>
+</html>

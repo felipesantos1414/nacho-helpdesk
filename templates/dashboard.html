@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – Nacho HelpDesk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <!-- ── Sidebar ───────────────────────────────────────── -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="/static/images/nacho-photo.png" class="logo-photo" alt="Nacho">
+            <div>
+                <span class="logo-name">Nacho</span>
+                <span class="logo-sub">AI HelpDesk</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="/" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                Chat
+            </a>
+            <a href="/dashboard" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Dashboard
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="/" class="new-chat-btn" style="text-decoration:none;text-align:center;">
+                <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                Novo Chat
+            </a>
+        </div>
+    </aside>
+
+    <!-- ── Dashboard Content ─────────────────────────────── -->
+    <main class="dash-main">
+        <div class="dash-header">
+            <div>
+                <h1 class="dash-title">Dashboard <span class="badge-admin">Admin</span></h1>
+                <p class="dash-subtitle">Visão geral do Nacho HelpDesk</p>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-blue">
+                    <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <div>
+                    <p class="kpi-label">Problemas no DB</p>
+                    <p class="kpi-value">{{ total_problems }}</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-green">
+                    <svg viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                </div>
+                <div>
+                    <p class="kpi-label">Interações hoje</p>
+                    <p class="kpi-value">{{ interactions_today }}</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-orange">
+                    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                    <p class="kpi-label">Taxa de resolução</p>
+                    <p class="kpi-value">{{ resolution_rate }}%</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-brown">
+                    <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <div>
+                    <p class="kpi-label">Usuários únicos</p>
+                    <p class="kpi-value">{{ total_sessions }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="dash-grid-2">
+            <!-- Top Problems -->
+            <div class="dash-card">
+                <h2 class="card-title">Problemas mais consultados</h2>
+                <div class="bar-chart">
+                    {% set max_count = namespace(val=1) %}
+                    {% for p in top_problems %}
+                        {% if p.count > max_count.val %}{% set max_count.val = p.count %}{% endif %}
+                    {% endfor %}
+                    {% for p in top_problems %}
+                    <div class="bar-row">
+                        <span class="bar-label">{{ p.category }}</span>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: {{ [(p.count / max_count.val * 100)|int, 4]|max }}%"></div>
+                        </div>
+                        <span class="bar-pct">{{ p.count }}</span>
+                    </div>
+                    {% endfor %}
+                    {% if not top_problems %}
+                    <p class="empty-state">Nenhuma interação ainda. Inicie um chat! 🐾</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dash-card">
+                <h2 class="card-title">Atividade recente</h2>
+                <div class="activity-list">
+                    {% for item in recent %}
+                    <div class="activity-item">
+                        <div class="activity-icon">🐾</div>
+                        <div class="activity-text">
+                            <p class="activity-msg">{{ item.user_message[:60] }}{% if item.user_message|length > 60 %}…{% endif %}</p>
+                            <p class="activity-time">{{ item.timestamp[:16].replace('T',' ') }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if not recent %}
+                    <p class="empty-state">Nenhuma atividade ainda. 🐾</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Problems Table -->
+        <div class="dash-card" style="margin-top:1.5rem">
+            <h2 class="card-title">Base de Conhecimento — 14 Problemas</h2>
+            <div class="table-wrap">
+                <table class="problems-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Problema</th>
+                            <th>Categoria</th>
+                            <th>Keywords</th>
+                        </tr>
+                    </thead>
+                    <tbody id="problemsTableBody">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    // Load problems table
+    fetch('/api/problems')
+        .then(r => r.json())
+        .then(data => {
+            const tbody = document.getElementById('problemsTableBody');
+            data.forEach((p, i) => {
+                const kws = p.keywords.split(',').slice(0,4).join(', ');
+                tbody.innerHTML += `
+                <tr>
+                    <td><span class="row-num">${i+1}</span></td>
+                    <td><strong>${p.title}</strong></td>
+                    <td><span class="cat-badge cat-${p.category.toLowerCase().replace(/[^a-z]/g,'')}">${p.category}</span></td>
+                    <td class="kw-cell">${kws}…</td>
+                </tr>`;
+            });
+        });
+    </script>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
