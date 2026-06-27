@@ -1,6 +1,7 @@
 # 🐾 Nacho — AI HelpDesk Assistant
 
 > **CS50x Final Project** | An intelligent IT support assistant with a Beagle personality
+> Video demo: https://www.youtube.com/watch?v=EXc5OcwLSFs
 
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
